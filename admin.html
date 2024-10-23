@@ -1,0 +1,58 @@
+<html>
+    <head>
+      <!-- <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" /> -->
+      <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+      <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <py-env>
+      - paths:
+        - ./main.py
+    </py-env>
+    </head>
+
+  <body>
+    <!-- <py-script src="./main.py"></py-script> -->
+    <main class="container">
+        <h1 id="result"></h1>
+        <input
+        type = "text"
+        id = "form_input"
+        placeholder="설문 조사 질문 작성하기"
+        />
+        <button id="add_form" pys-onClick="add_form">Create</button>
+        <button id="apply">Apply</button>
+        <ul id="form_list">
+        </ul>
+      </main>
+      <script>
+        const formInput = document.getElementById('form_input');
+        const formList = document.getElementById('form_list');
+        const addFormButton = document.getElementById('add_form');
+        
+        addFormButton.onclick = () => {
+            const question = formInput.value.trim();
+            if (question) {
+                const listItem = document.createElement('li');
+                listItem.textContent = question;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.onclick = () => {
+                    formList.removeChild(listItem);
+                };
+
+                listItem.appendChild(deleteButton);
+                formList.appendChild(listItem); 
+                formInput.value = '';
+            }
+        };
+        
+        document.getElementById('apply').onclick = () => {
+            const questions = Array.from(formList.querySelectorAll('li')).map(li => li.textContent);
+            let answer_storage = [];
+            question_answer = {"question" : questions, "answer" : answer_storage.slice(0, -1)};
+            localStorage.setItem('formQuestions', JSON.stringify(question_answer));
+            window.location.href = 'index.html';
+        };
+    </script>
+  </body>
+</html>

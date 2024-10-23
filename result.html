@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <title>결과 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <py-script src="./main.py"></py-script>
+    <main class="container">
+        <h1>설문조사 결과</h1>
+        <ul id="result_list"></ul>
+        <button onclick="location.href='form.html'">다시 작성하기</button>
+        <button id="save">저장</button>
+    </main>
+    <script>
+        const resultList = document.getElementById('result_list');
+        const answers = JSON.parse(localStorage.getItem('formAnswers')) || [];
+        answers[0].forEach((answer, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${answers[0][index]}: ${answers[1][index]}`; // 각 질문에 대한 답변 표시
+            resultList.appendChild(listItem);
+        });
+
+        line = document.createElement("li");
+        line.textContent = "\n";
+        resultList.appendChild(line);
+
+        document.getElementById('save').onclick = () => {
+            const saveInputQuestion = Array.from(resultList.querySelectorAll('li')).map(li => li.textContent);
+            
+            // answers[2] 배열에 새 답변 추가
+            const existingAnswers = JSON.parse(localStorage.getItem('formAnswers')) || [[], [], []]; // 기존 답변 불러오기
+            existingAnswers[2] = existingAnswers[2].concat(saveInputQuestion); // 새 답변 추가
+
+            // formQuestions 업데이트
+            const questions = JSON.parse(localStorage.getItem('formQuestions'));
+            const updatedQuestions = {
+                question: questions.question,
+                answer: existingAnswers[2]
+            };
+            localStorage.setItem('formQuestions', JSON.stringify(updatedQuestions)); // 업데이트된 질문 저장
+
+            // result_lists 저장
+            localStorage.setItem('result_lists', JSON.stringify(existingAnswers[2]));
+            
+            window.location.href = 'index.html'; 
+        };
+
+    </script>
+</body>
+</html>

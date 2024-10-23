@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <title>설문 조사 결과</title>
+</head>
+<body>
+    <h1>설문조사</h1>
+    <ul id="form_list"></ul>
+    <button id="submit">제출</button>
+
+    <script>
+        const formList = document.getElementById('form_list');
+        const questions = JSON.parse(localStorage.getItem('formQuestions')) || [];
+        
+        const resultList = document.createElement("ul"); // 새로운 ul 생성
+        resultList.id = "result_list"; // ID 부여
+        document.body.appendChild(resultList); // DOM에 추가
+    
+        questions["question"].forEach((question, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = question.slice(0, -6); // 질문 표시
+            
+            const answer = document.createElement("input");
+            answer.placeholder = "답변을 작성 해주세요.";
+            
+            formList.appendChild(listItem);
+            formList.appendChild(answer);
+        });
+    
+        document.getElementById('submit').onclick = () => { // ID 수정
+            const answers = Array.from(formList.querySelectorAll('input')).map(input => input.value); // 입력값 수집
+            const inputQuestions = Array.from(formList.querySelectorAll('li')).map(li => li.textContent); // li의 textContent 사용
+
+            const res = [inputQuestions, answers, questions["answer"]];
+            localStorage.setItem('formAnswers', JSON.stringify(res)); // 배열 저장
+            window.location.href = 'result.html'; // 다른 페이지로 이동
+        };
+    </script>
+    
+</body>
+</html>

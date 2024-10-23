@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer</title>
+</head>
+<body>
+    <ul id="result_lists"></ul>
+    <script>
+        const resultLists = JSON.parse(localStorage.getItem('result_lists')) || []; // result_lists에서 데이터 가져오기
+        const resultListElement = document.getElementById('result_lists');
+
+        resultLists.forEach((answer, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = answer
+            resultListElement.appendChild(listItem);
+        });
+    </script>
+</body>
+</html>
